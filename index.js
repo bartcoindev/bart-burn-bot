@@ -81,19 +81,43 @@ bot.command("all_entries", async (ctx) => {
 
   const eligibleBurntAddresses = await getPastEvents();
   const keys = Object.keys(eligibleBurntAddresses);
-  let addressesMessage = "";
 
-  for (let index = 0; index < keys.length; index++) {
-    const [address, amount] = eligibleBurntAddresses[keys[index]];
-    addressesMessage += `${index + 1}. <code>${address}</code> : ${amount} ${
-      process.env.COIN_DENOM
-    }\n`;
-  }
-
-  if (addressesMessage) {
-    await ctx.replyWithHTML(addressesMessage);
-  } else {
+  if (keys.length === 0) {
     await ctx.reply("Nothing to show at the moment");
+  } else {
+    if (keys.length <= 50) {
+      let addressesMessage = "";
+
+      for (let index = 0; index < keys.length; index++) {
+        const [address, amount] = eligibleBurntAddresses[keys[index]];
+        addressesMessage += `${
+          index + 1
+        }. <code>${address}</code> : ${amount} ${process.env.COIN_DENOM}\n`;
+      }
+
+      await ctx.replyWithHTML(addressesMessage);
+    } else {
+      let addressesMessageBatch1 = "";
+
+      for (let index = 0; index < 50; index++) {
+        const [address, amount] = eligibleBurntAddresses[keys[index]];
+        addressesMessageBatch1 += `${
+          index + 1
+        }. <code>${address}</code> : ${amount} ${process.env.COIN_DENOM}\n`;
+      }
+
+      await ctx.replyWithHTML(addressesMessageBatch1);
+      let addressesMessageBatch2 = "";
+
+      for (let index = 50; index < keys.length; index++) {
+        const [address, amount] = eligibleBurntAddresses[keys[index]];
+        addressesMessageBatch2 += `${
+          index + 1
+        }. <code>${address}</code> : ${amount} ${process.env.COIN_DENOM}\n`;
+      }
+
+      await ctx.replyWithHTML(addressesMessageBatch2);
+    }
   }
 });
 
