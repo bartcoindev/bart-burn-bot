@@ -97,26 +97,36 @@ bot.command("all_entries", async (ctx) => {
 
       await ctx.replyWithHTML(addressesMessage);
     } else {
-      let addressesMessageBatch1 = "";
+      let quotient = Math.floor(keys.length / 50);
+      let remainder = keys.length % 50;
 
-      for (let index = 0; index < 50; index++) {
-        const [address, amount] = eligibleBurntAddresses[keys[index]];
-        addressesMessageBatch1 += `${
-          index + 1
-        }. <code>${address}</code> : ${amount} ${process.env.COIN_DENOM}\n`;
+      let index = 0;
+
+      while (quotient > 0) {
+        let addressesMessage = "";
+
+        for (let i = index; i < index + 50; i++) {
+          const [address, amount] = eligibleBurntAddresses[keys[i]];
+          addressesMessage += `${i + 1}. <code>${address}</code> : ${amount} ${
+            process.env.COIN_DENOM
+          }\n`;
+        }
+
+        await ctx.replyWithHTML(addressesMessage);
+        index += 50;
+        quotient--;
       }
 
-      await ctx.replyWithHTML(addressesMessageBatch1);
-      let addressesMessageBatch2 = "";
-
-      for (let index = 50; index < keys.length; index++) {
+      let addressesMessage = "";
+      while (remainder > 0) {
         const [address, amount] = eligibleBurntAddresses[keys[index]];
-        addressesMessageBatch2 += `${
+        addressesMessage += `${
           index + 1
         }. <code>${address}</code> : ${amount} ${process.env.COIN_DENOM}\n`;
+        index++;
+        remainder--;
       }
-
-      await ctx.replyWithHTML(addressesMessageBatch2);
+      await ctx.replyWithHTML(addressesMessage);
     }
   }
 });
