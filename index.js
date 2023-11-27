@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 const bot = new Telegraf(process.env.COINFLIP_TELEGRAM_BOT_TOKEN);
-const chatId = { value: "-1575305476" };
+const chatId = { value: "-1001575305476" };
 
 app.use(bot.webhookCallback("/secret-path"));
 bot.telegram.setWebhook(`${process.env.DEPLOYED_URL}/secret-path`);
