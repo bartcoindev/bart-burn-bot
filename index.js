@@ -14,13 +14,13 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 const bot = new Telegraf(process.env.COINFLIP_TELEGRAM_BOT_TOKEN);
-const chatId = { value: "" };
+const chatId = { value: "-1575305476" };
 
 app.use(bot.webhookCallback("/secret-path"));
 bot.telegram.setWebhook(`${process.env.DEPLOYED_URL}/secret-path`);
 
 bot.command("start", async (ctx) => {
-  chatId.value = ctx.chat.id;
+  ctx.chat.id && (chatId.value = ctx.chat.id);
 
   await ctx.reply(
     `🔥 Welcome to the ${process.env.BOT_NAME} 🔥\nThis bot tracks and ranks all qualifying wallets and their associated burn transactions for [$${process.env.COIN_DENOM}](${process.env.BART_TOKEN_ETHERSCAN}) burn competitions. Type /help to see all available commands.`,
@@ -29,7 +29,7 @@ bot.command("start", async (ctx) => {
 });
 
 bot.command("help", async (ctx) => {
-  chatId.value = ctx.chat.id;
+  ctx.chat.id && (chatId.value = ctx.chat.id);
 
   await ctx.reply(
     `Welcome to the BurnBot Help Center\n\nReady to torch some <a href="${process.env.BART_TOKEN_ETHERSCAN}">$${process.env.COIN_DENOM}</a>? Here's a quick guide to get you started:\n\n1. /competition\n  • This provides details of the current burn competition including rules, prizes and entry instruction\n\n2. /topten\n  • This provides a ranking of the top 10 biggest burns in the competition and the associated wallets\n\n3. /all_entries\n  • This provides a list of all qualifying wallets that have secured a spot in the competition by burning the minimum required amount of <a href="${process.env.BART_TOKEN_ETHERSCAN}">$${process.env.COIN_DENOM}</a> (${process.env.MINIMUM_BURN_AMOUNT} Tokens)`,
@@ -38,7 +38,7 @@ bot.command("help", async (ctx) => {
 });
 
 bot.command("competition", async (ctx) => {
-  chatId.value = ctx.chat.id;
+  ctx.chat.id && (chatId.value = ctx.chat.id);
 
   await ctx.reply(
     `OMNI-PASS NFT BURN COMPETITION\n🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥\nBurn ${process.env.MINIMUM_BURN_AMOUNT} or more [$${process.env.COIN_DENOM}](${process.env.BART_TOKEN_ETHERSCAN}) tokens before all entry slots are filled to qualify among the top ${process.env.TOTAL_SPOTS} burners for a FREE NFT WHITELIST SPOT. When we mint the collection whitelist spots will only pay the gas to mint. Each separate burn over ${process.env.MINIMUM_BURN_AMOUNT} tokens qualifies for a separate whitelist spot, think of it as if you are trading those tokens for an NFT with each qualifying burn transaction.\n\nTo burn your [$${process.env.COIN_DENOM}](${process.env.BART_TOKEN_ETHERSCAN}) tokens you must send them to THIS SPECIFIC Ethereum dead wallet address:\n\n${process.env.DEAD_WALLET_ADDRESS}\n\nThe biggest burn at the end of the competition will secure one of our ULTRA-RARE 1 of 1 OMNI-PASSES which provide their holders with Reptilian Elite privileges in the [$${process.env.COIN_DENOM}](${process.env.BART_TOKEN_ETHERSCAN}) universe as well as a SIGNED COPY of David Icke’s new book The Trap.\n\nN.B. ANY BURNS AFTER ALL ENTRIES ARE FILLED WILL NOT BE COUNTED AND WILL NOT GET WHITELISTED SO MOVE FAST.`,
@@ -47,7 +47,7 @@ bot.command("competition", async (ctx) => {
 });
 
 bot.command("topten", async (ctx) => {
-  chatId.value = ctx.chat.id;
+  ctx.chat.id && (chatId.value = ctx.chat.id);
   await ctx.reply(`🔥 Top 10 Burns 🔥`);
 
   const eligibleBurntAddresses = await getPastEvents();
@@ -76,7 +76,7 @@ bot.command("topten", async (ctx) => {
 });
 
 bot.command("all_entries", async (ctx) => {
-  chatId.value = ctx.chat.id;
+  ctx.chat.id && (chatId.value = ctx.chat.id);
   await ctx.reply(`🔥 Qualifying Burners 🔥`);
 
   const eligibleBurntAddresses = await getPastEvents();
