@@ -24,7 +24,7 @@ async function getPastEvents() {
   const toWalletAddress = process.env.DEAD_WALLET_ADDRESS;
   const filter = {
     address: contractAddress,
-    fromBlock: 18650287,
+    fromBlock: 18820934,
     toBlock: "latest",
     topics: [
       ethers.utils.id("Transfer(address,address,uint256)"),
